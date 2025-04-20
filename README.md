@@ -67,25 +67,8 @@ npm run dev
 Configure .env.local
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 
-📁 Project Structure
-blolicious-frontend/
-│
-├── app/
-│   ├── dashboard/        # Authenticated user routes
-│   ├── auth/             # Login & Register pages
-│   └── layout.jsx        # Root layout
-│
-├── context/
-│   └── useUserStore.js   # Zustand store for auth
-│
-├── components/
-│   ├── AuthInterceptor.jsx
-│   └── Navbar.jsx
-│
-├── lib/
-│   └── axios.js          # Axios instance with interceptors
-│
-└── public/
+##  Project Structure
+<pre lang="markdown"> ``` blolicious-frontend/ │ ├── app/ │ ├── dashboard/ # Authenticated user routes │ ├── auth/ # Login & Register pages │ └── layout.jsx # Root layout │ ├── context/ │ └── useUserStore.js # Zustand store for auth │ ├── components/ │ ├── AuthInterceptor.jsx │ └── Navbar.jsx │ ├── lib/ │ └── axios.js # Axios instance with interceptors │ └── public/ ``` </pre>
 
 🧪 Authentication Flow
 On login, backend sets access_token and refresh_token as cookies.
