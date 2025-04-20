@@ -68,7 +68,24 @@ Configure .env.local
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 
 ##  Project Structure
-<pre lang="markdown"> ``` blolicious-frontend/ │ ├── app/ │ ├── dashboard/ # Authenticated user routes │ ├── auth/ # Login & Register pages │ └── layout.jsx # Root layout │ ├── context/ │ └── useUserStore.js # Zustand store for auth │ ├── components/ │ ├── AuthInterceptor.jsx │ └── Navbar.jsx │ ├── lib/ │ └── axios.js # Axios instance with interceptors │ └── public/ ``` </pre>
+frontend/blolify
+│
+├── app/
+│   ├── dashboard/        # Authenticated user routes
+│   ├── auth/             # Login & Register pages
+│   └── layout.jsx        # Root layout
+│
+├── context/
+│   └── useUserStore.js   # Zustand store for auth
+│
+├── components/
+│   ├── AuthInterceptor.jsx
+│   └── Navbar.jsx
+│
+├── lib/
+│   └── axios.js          # Axios instance with interceptors
+│
+└── public/
 
 🧪 Authentication Flow
 On login, backend sets access_token and refresh_token as cookies.
@@ -77,7 +94,7 @@ Axios sends cookies with each request (withCredentials: true).
 
 If a request returns 401, an interceptor automatically calls /refresh/.
 
-New access_token is stored again via HTTP-only cookie.
+New access_token is stored again via an HTTP-only cookie.
 
 ✨ Upcoming Features
 🍴 Post categories (e.g., Vegan, Dessert, etc.)
