@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.env
+
+# Django
+db.sqlite3
+*.log
+staticfiles/
+media/
+local_settings.py
+
+# Virtual env
+venv/
+env/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migrations (optional, if you want to ignore compiled migration files)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Pytest cache
+.pytest_cache/

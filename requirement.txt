@@ -1,0 +1,7 @@
+djangorestframework
+psycopg2 #postgresql database adapter
+psycopg2-binary
+django-environ
+djangorestframework-simplejwt
+Pillow
+django-cors-headers
