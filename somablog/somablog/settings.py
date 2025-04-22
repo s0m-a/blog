@@ -148,7 +148,7 @@ MEDIA_URL = '/media/' # URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') # Local filesystem path to store uploaded files
 # Disable CSRF for the API endpoints, since JWT authentication is used
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # your frontend
+    "http://localhost:3001"  # your frontend
 ]
 
 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import AxiosInstance from "@/lib/axios";
 import {toast} from 'react-hot-toast';
+let refreshPromise;
 
 export const useUserStore = create( (set, get) => ({
     user: null,
@@ -99,24 +100,56 @@ export const useUserStore = create( (set, get) => ({
     },
 
     refreshToken: async () => {
-        if (get().checkingAuth) return; // Prevent simultaneous refresh requests
+        if (refreshPromise) return refreshPromise; // wait for ongoing refresh if any
     
-        set({ checkingAuth: true });
+        refreshPromise = (async () => {
+            set({ checkingAuth: true });
+            try {
+                const response = await AxiosInstance.post("/refresh/", null, {
+                    withCredentials: true,
+                });
+                return response.data;
+            } catch (error) {
+                set({ user: null });
+                throw error;
+            } finally {
+                refreshPromise = null;
+                set({ checkingAuth: false });
+            }
+        })();
     
-        try {
-          const response = await AxiosInstance.post("/refresh/", null, {
-            withCredentials: true, // Ensure cookies are sent
-          });
-          console.log("Refreshed token:", response.data);
-          set({ checkingAuth: false, user: response.data.user }); // Update user with new token data
-          return response.data; // Return the refreshed token data
-        } catch (error) {
-          set({ checkingAuth: false });
-          console.error(`Error refreshing token: ${error}`);
-          throw error; // Propagate the error for the interceptor to handle
-        }
-      },
-      logout: () => {
-        set({ user: null });
-      },
+        return refreshPromise;
+    }
+    
 }));
+
+AxiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      console.log("AXIOS INTERCEPTOR HIT", error?.response?.status);
+      const originalRequest = error.config;
+
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+
+        try {
+          console.log("TRYING TO REFRESH TOKEN...");
+
+          if (refreshPromise) {
+            await refreshPromise;
+            return AxiosInstance(originalRequest)
+          } else {
+            refreshPromise = useUserStore.getState().refreshToken();
+            await refreshPromise;
+            refreshPromise = null;
+            return AxiosInstance(originalRequest)
+          }
+        } catch (err) {
+          console.error("REFRESH FAILED", err);
+          useUserStore.getState().logout(); // Handle logout if refresh fails
+          return Promise.reject(err);
+        }
+      }
+
+      return Promise.reject(error);
+    });

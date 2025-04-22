@@ -56,7 +56,6 @@ class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
         # Retrieve the token from the cookies
         token = request.COOKIES.get('access_token')
-        print(f"Access token retrieved from cookies: {token}")
         if not token:
             print("No token provided")
             raise AuthenticationFailed('No token provided')
@@ -64,7 +63,6 @@ class CustomJWTAuthentication(JWTAuthentication):
         try:
             # Validate the token using the inherited method from JWTAuthentication
             validated_token = self.get_validated_token(token)
-            print(f"Token is valid: {validated_token}")
         except Exception as e:
             raise AuthenticationFailed(f'Token is invalid: {str(e)}')
 
@@ -168,10 +166,7 @@ class RefreshTokenView(APIView):
             refresh = RefreshToken(refresh_token)
             access_token = str(refresh.access_token)
 
-            response = Response({
-                'access_token': access_token
-            }, status=status.HTTP_200_OK)
-
+            response = Response({"message": "Access token refreshed"}, status=status.HTTP_200_OK)
             response.set_cookie(
                 key='access_token',
                 value=access_token,
@@ -180,7 +175,7 @@ class RefreshTokenView(APIView):
                 samesite='Lax',
                 max_age=1 * 3600,
             )
-            print(f"recieved response ${response}")
+            print(f"recieved response {response}")
             return response
 
         except TokenError:
